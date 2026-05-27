@@ -88,6 +88,123 @@
     pointer-events: auto;
   }
 
+  /* ───────────────────────────────────────────
+     SCENE 0 — LOCK
+     ─────────────────────────────────────────── */
+  .lock-scene { gap: 28px; }
+  .lock-icon {
+    width: 64px; height: 64px;
+    background: linear-gradient(135deg, var(--pink-deep) 0%, var(--pink-bright) 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 24px rgba(255,45,135,0.35);
+  }
+  .lock-icon svg { width: 32px; height: 32px; fill: white; }
+  .lock-title {
+    font-family: var(--font-script);
+    font-weight: 400;
+    font-size: 48px;
+    color: var(--rosie-red);
+    margin: 0;
+    line-height: 1;
+  }
+  .lock-sub {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 18px;
+    color: var(--text-soft);
+    margin: 0;
+    max-width: 280px;
+    line-height: 1.3;
+  }
+  .lock-sub em { color: var(--rosie-red); font-weight: 500; font-style: normal; }
+
+  .pin-row {
+    display: flex;
+    gap: 12px;
+    margin: 4px 0;
+  }
+  .pin-row.shake { animation: pin-shake 0.42s cubic-bezier(.36,.07,.19,.97); }
+  @keyframes pin-shake {
+    10%, 90%  { transform: translateX(-2px); }
+    20%, 80%  { transform: translateX(4px);  }
+    30%, 50%, 70% { transform: translateX(-8px); }
+    40%, 60%  { transform: translateX(8px);  }
+  }
+  .pin-dot {
+    width: 48px;
+    height: 58px;
+    border-radius: 14px;
+    background: white;
+    border: 1.5px solid var(--pink-mid);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--rosie-red);
+    box-shadow: 0 3px 10px rgba(255,45,135,0.08);
+    transition: transform 0.15s ease, border-color 0.2s ease, background 0.2s ease;
+  }
+  .pin-dot.filled {
+    background: linear-gradient(135deg, var(--pink-deep) 0%, var(--pink-bright) 100%);
+    color: white;
+    border-color: transparent;
+    transform: scale(1.04);
+  }
+  .pin-dot.error {
+    border-color: #e53e6b;
+    background: #fff0f3;
+    color: #e53e6b;
+  }
+
+  .pin-msg {
+    font-family: var(--font-display);
+    font-style: italic;
+    font-size: 16px;
+    color: var(--text-muted);
+    min-height: 24px;
+    margin: 0;
+  }
+  .pin-msg.error { color: #e53e6b; }
+
+  .keypad {
+    display: grid;
+    grid-template-columns: repeat(3, 70px);
+    gap: 12px;
+    margin-top: 6px;
+  }
+  .key {
+    appearance: none;
+    border: none;
+    background: white;
+    color: var(--rosie-red);
+    width: 70px;
+    height: 70px;
+    border-radius: 50%;
+    font-family: var(--font-body);
+    font-size: 26px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 4px 12px rgba(255,45,135,0.12);
+    border: 1px solid var(--pink-mid);
+    transition: transform 0.12s ease, background 0.12s ease;
+  }
+  .key:active { transform: scale(0.92); background: var(--pink-blush); }
+  .key.action {
+    background: transparent;
+    color: var(--text-soft);
+    box-shadow: none;
+    border: 1px dashed rgba(164,25,61,0.25);
+    font-size: 18px;
+    font-style: italic;
+    font-family: var(--font-display);
+  }
+  .key.action:active { background: rgba(255,45,135,0.06); }
+
   /* ─────────────────────────────────────────────
      SCENE 1 — OPENING
      ───────────────────────────────────────────── */
@@ -634,8 +751,44 @@
 
   <main id="app">
 
+    <!-- ═══ Scene 0: Lock ═══ -->
+    <section class="scene lock-scene active" data-scene="lock">
+      <div class="lock-icon">
+        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+          <path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5zm-3 8V7a3 3 0 1 1 6 0v3H9zm3 4a1.6 1.6 0 0 1 .8 3l.3 2.3a.5.5 0 0 1-.5.6h-1.2a.5.5 0 0 1-.5-.6l.3-2.3A1.6 1.6 0 0 1 12 14z"/>
+        </svg>
+      </div>
+
+      <h1 class="lock-title">for mie only ♡</h1>
+      <p class="lock-sub">enter the code, my <em>number one</em> 🌷</p>
+
+      <div class="pin-row" id="pin-row">
+        <div class="pin-dot" data-pin="0"></div>
+        <div class="pin-dot" data-pin="1"></div>
+        <div class="pin-dot" data-pin="2"></div>
+        <div class="pin-dot" data-pin="3"></div>
+      </div>
+
+      <p class="pin-msg" id="pin-msg">hint: a day you know 🎂</p>
+
+      <div class="keypad" id="keypad">
+        <button class="key" data-key="1">1</button>
+        <button class="key" data-key="2">2</button>
+        <button class="key" data-key="3">3</button>
+        <button class="key" data-key="4">4</button>
+        <button class="key" data-key="5">5</button>
+        <button class="key" data-key="6">6</button>
+        <button class="key" data-key="7">7</button>
+        <button class="key" data-key="8">8</button>
+        <button class="key" data-key="9">9</button>
+        <button class="key action" data-key="clear">clear</button>
+        <button class="key" data-key="0">0</button>
+        <button class="key action" data-key="back">⌫</button>
+      </div>
+    </section>
+
     <!-- ═══ Scene 1: Opening ═══ -->
-    <section class="scene active" data-scene="opening">
+    <section class="scene" data-scene="opening">
       <div class="opening__stickers">
         <span class="sticker">a little gift</span>
         <span class="sticker dark">2026</span>
@@ -771,6 +924,84 @@
   function showScene(name) {
     scenes.forEach(s => s.classList.toggle('active', s.dataset.scene === name));
   }
+
+  // ─── Lock screen / PIN ───
+  const PIN = '2402';
+  let pinBuffer = '';
+  const pinDots = [...document.querySelectorAll('.pin-dot')];
+  const pinMsg  = document.getElementById('pin-msg');
+  const pinRow  = document.getElementById('pin-row');
+  const keypad  = document.getElementById('keypad');
+
+  function renderPin() {
+    pinDots.forEach((d, i) => {
+      const filled = i < pinBuffer.length;
+      d.classList.toggle('filled', filled);
+      d.classList.remove('error');
+      d.textContent = filled ? '•' : '';
+    });
+  }
+
+  function setPinMsg(text, isError = false) {
+    pinMsg.textContent = text;
+    pinMsg.classList.toggle('error', isError);
+  }
+
+  function unlock() {
+    setPinMsg('welcome, mie ♡', false);
+    pinDots.forEach(d => d.classList.add('filled'));
+    setTimeout(() => showScene('opening'), 700);
+  }
+
+  function wrongPin() {
+    pinDots.forEach(d => { d.classList.remove('filled'); d.classList.add('error'); });
+    pinRow.classList.remove('shake');
+    void pinRow.offsetWidth;
+    pinRow.classList.add('shake');
+    setPinMsg('not quite — try again 🥺', true);
+    setTimeout(() => {
+      pinBuffer = '';
+      renderPin();
+      setPinMsg('hint: a day you know 🎂', false);
+    }, 900);
+  }
+
+  function pressKey(k) {
+    if (k === 'clear') {
+      pinBuffer = '';
+      renderPin();
+      setPinMsg('hint: a day you know 🎂', false);
+      return;
+    }
+    if (k === 'back') {
+      pinBuffer = pinBuffer.slice(0, -1);
+      renderPin();
+      return;
+    }
+    if (pinBuffer.length >= 4) return;
+    pinBuffer += k;
+    renderPin();
+    if (pinBuffer.length === 4) {
+      setTimeout(() => {
+        if (pinBuffer === PIN) unlock();
+        else wrongPin();
+      }, 220);
+    }
+  }
+
+  keypad.addEventListener('click', e => {
+    const btn = e.target.closest('[data-key]');
+    if (btn) pressKey(btn.dataset.key);
+  });
+
+  // physical keyboard support
+  document.addEventListener('keydown', e => {
+    const lockActive = document.querySelector('.scene.active')?.dataset.scene === 'lock';
+    if (!lockActive) return;
+    if (/^[0-9]$/.test(e.key)) pressKey(e.key);
+    else if (e.key === 'Backspace') pressKey('back');
+    else if (e.key === 'Escape')   pressKey('clear');
+  });
 
   // ─── Heart-press progression ───
   const heartMessages = [
